@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 export class ProdutoRepository {
   private produtos: any = [];
 
-  salvarProduto(produto) {
+  salvarProduto(produto: any) {
     this.produtos.push(produto);
     console.log(this.produtos);
   }
