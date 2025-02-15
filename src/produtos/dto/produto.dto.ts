@@ -14,10 +14,12 @@ import {
 import { CaracteristicaProdutoDTO } from './caracteristica.produto.dto';
 import { ImagemProdutoDTO } from './imagem.produto.dto';
 import { Type } from 'class-transformer';
+import { ValidaNome } from '../validator/produto-unico.validator';
 
 export class ProdutoDTO {
   @IsString({ message: 'Nome inválido.' })
   @IsNotEmpty({ message: 'Campo nome não pode ser vazio.' })
+  @ValidaNome({ message: "Já existe um produto com o mesmo nome cadastrado, tente um nome diferente." })
   nome: string;
 
   @IsNotEmpty({ message: 'Valor não poder estar vazio.' })

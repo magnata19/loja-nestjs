@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ProdutoDTO } from './dto/produto.dto';
 
 @Injectable()
 export class ProdutoRepository {
@@ -11,5 +12,10 @@ export class ProdutoRepository {
 
   listarProdutos(): unknown {
     return this.produtos;
+  }
+
+  async validarNomeProduto(nome: string) {
+    const nomeValido = await this.produtos.find((prod: ProdutoDTO) => prod.nome === nome)
+    return !nomeValido;
   }
 }
