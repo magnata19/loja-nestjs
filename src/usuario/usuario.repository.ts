@@ -25,10 +25,7 @@ export class UsuarioRepository {
   }
 
   async atualizaUsuario(id: string, usuario: Partial<UsuarioEntity>) {
-    const usuario_id: any = this.usuarios.find(usuarioSalvo => usuarioSalvo.id === id);
-    if (!usuario_id) {
-      throw new Error("Usuário não encontrado");
-    }
+    const usuario_id: any = await this.buscaPorId(id);
     Object.entries(usuario).forEach(([key, value]) => {
       if (key === "id") {
         return;
@@ -36,5 +33,23 @@ export class UsuarioRepository {
       usuario_id[key] = value;
     })
     return usuario_id;
+  }
+
+  async deletarUsuario(id: string) {
+    const usuario = await this.buscaPorId(id);
+    this.usuarios = this.usuarios.filter(
+      usr => usr.id !== id
+    );
+    return usuario;
+  }
+
+  async buscaPorId(id: string) {
+    const possivelUsuario = await this.usuarios.find(
+      usr => usr.id === id
+    );
+    if (!possivelUsuario) {
+      throw new Error("Usuário não encontrado.")
+    }
+    return possivelUsuario;
   }
 }
