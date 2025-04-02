@@ -4,6 +4,7 @@ import { ProdutoModule } from './produtos/produto.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresConfigService } from './config/postgres.config.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UsuarioService } from './usuario/user.service';
 
 @Module({
   imports: [

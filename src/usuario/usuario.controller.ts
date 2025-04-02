@@ -5,46 +5,42 @@ import { UsuarioEntity } from './entity/usuario.entity';
 import { v4 as uuid } from 'uuid';
 import { ListaUsuarios } from './dto/ListaUsuario.dto';
 import { AtualizaUsuarioDto } from './dto/AtualizaUsuario.dto';
+import { UsuarioService } from './user.service';
 
 @Controller('/usuarios')
 @Injectable()
 export class UsuarioController {
   constructor(private usuarioRepository: UsuarioRepository,
+    private usuarioService: UsuarioService
   ) { }
 
   @Post()
-  criaUsuario(@Body() dados: UsuarioDto) {
+  criaUsuario(@Body() dados: UsuarioDto): Promise<{ message: string, usuario: UsuarioDto }> {
     const usuario = new UsuarioEntity;
     usuario.id = uuid();
     usuario.nome = dados.nome;
     usuario.email = dados.email;
     usuario.senha = dados.senha;
-    this.usuarioRepository.salvarUsuario(usuario);
-    return {
-      usuario: new ListaUsuarios(usuario.id, usuario.nome),
-      message: 'Usuário criado com sucesso!'
-    };
+    return this.usuarioService.criarUsuario(usuario);
   }
 
   @Get()
-  listarUsuarios() {
-    const usuarios = this.usuarioRepository.listarUsuarios();
-    const usuario = usuarios.map((usr) => new ListaUsuarios(usr.id, usr.nome));
-    return usuario;
+  async listarUsuarios(): Promise<Array<ListaUsuarios>> {
+    const usuarios = await this.usuarioService.listaUsuarios()
+    return usuarios;
   }
 
   @Put("/:id")
-  async atualizaUsuario(@Param('id') id: string, @Body() usuario: AtualizaUsuarioDto) {
-    const usuarioAtualizado = await this.usuarioRepository.atualizaUsuario(id, usuario);
+  async atualizaUsuario(@Param('id') id: string, @Body() usuario: AtualizaUsuarioDto): Promise<{ message: string }> {
+    const user = await this.usuarioService.atualizaUsuario(id, usuario);
     return {
-      usuario: usuarioAtualizado,
-      message: "Usuário atualizado com sucesso."
+      message: `Usuário ${user.message.replace("Usuário", '')} atualizado com sucesso.`
     };
   }
 
   @Delete("/:id")
-  async deletarUsuario(@Param("id") id: string) {
-    const usuarioRemovido = await this.usuarioRepository.deletarUsuario(id);
-    return { message: `Usuário ${usuarioRemovido?.nome} foi removido con sucesso.` }
+  async deletarUsuario(@Param("id") id: string): Promise<{ message: string }> {
+    const user = await this.usuarioService.deletarUsuario(id);
+    return { message: `Usuário${user.message.replace('Usuário', '')} foi removido con sucesso.` }
   }
 }
