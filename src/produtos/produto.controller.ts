@@ -3,39 +3,32 @@ import { ProdutoRepository } from './produto.repository';
 import { ProdutoDTO } from './dto/produto.dto';
 import { ProdutoEntity } from './entity/produto.entity';
 import { v4 as uuid } from 'uuid';
+import { ProdutoService } from './service/produto.service';
 
 @Controller('/produtos')
 export class ProdutoController {
-  constructor(private produtoRepository: ProdutoRepository) { }
+  constructor(private produtoService: ProdutoService) { }
 
   @Post()
-  public salvarProduto(@Body() produto: ProdutoDTO) {
-    const produtoEntity = new ProdutoEntity;
-    produtoEntity.id = uuid();
-    produtoEntity.nome = produto.nome;
-    produtoEntity.valor = produto.valor;
-    produtoEntity.descricao = produto.descricao;
-    produtoEntity.caracteristicas = produto.caracteristicas;
-    produtoEntity.imagens = produto.imagens;
-    produtoEntity.categoria = produto.categoria;
-    this.produtoRepository.salvarProduto(produtoEntity);
-    return { produto: produtoEntity, message: 'Produto criado com sucesso.' }
+  async salvarProduto(@Body() produto: ProdutoDTO): Promise<any> {
+    const currentProduct = await this.produtoService.criaProduto(produto);
+    return { message: 'Produto criado com sucesso.', produto: currentProduct }
   }
 
   @Get()
   public listarProdutos() {
-    return this.produtoRepository.listarProdutos();
+    return this.produtoService.listarProdutos();
   }
 
   @Put("/:id")
-  async atualizaProduto(@Param('id') id: string, @Body() produto: ProdutoDTO) {
-    const produtoAtualizado = await this.produtoRepository.atualizaProduto(id, produto);
-    return { produto: produtoAtualizado, message: "Produto atualizado com sucesso!" }
+  async atualizaProduto(@Param('id') id: string, @Body() produto: ProdutoDTO): Promise<{ message: string }> {
+    await this.produtoService.atualizarProduto(id, produto)
+    return { message: "Produto atualizado com sucesso!" }
   }
 
   @Delete("/:id")
-  async deletarProduto(@Param('id') id: string) {
-    const produtoId = await this.produtoRepository.deletarProduto(id);
-    return { message: `${produtoId?.nome} foi deletado com sucesso.` }
+  async deletarProduto(@Param('id') id: string): Promise<{ message: string }> {
+    await this.produtoService.deletarProduto(id);
+    return { message: "Produto deletado com sucesso." }
   }
 }
