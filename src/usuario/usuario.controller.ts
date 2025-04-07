@@ -16,12 +16,7 @@ export class UsuarioController {
 
   @Post()
   criaUsuario(@Body() dados: UsuarioDto): Promise<{ message: string, usuario: UsuarioDto }> {
-    const usuario = new UsuarioEntity;
-    usuario.id = uuid();
-    usuario.nome = dados.nome;
-    usuario.email = dados.email;
-    usuario.senha = dados.senha;
-    return this.usuarioService.criarUsuario(usuario);
+    return this.usuarioService.criarUsuario(dados);
   }
 
   @Get()

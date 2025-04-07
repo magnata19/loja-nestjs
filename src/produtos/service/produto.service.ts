@@ -15,7 +15,7 @@ export class ProdutoService {
 
       return { message: "Produto criado com sucesso", produto: currentProduct };
     } catch (err) {
-      throw new UnprocessableEntityException("Erro ao criar produto", err);
+      throw new UnprocessableEntityException("Erro ao criar produto", err.message);
     }
   }
 
@@ -48,5 +48,10 @@ export class ProdutoService {
     }
     await this.productRepository.delete(id);
     return { message: `${produtoExistente.nome} foi deletado com sucesso.` };
+  }
+
+  async validarNomeProduto(nome: string) {
+    const nomeValido = await this.productRepository.find({ where: { nome: nome } });
+    return nomeValido;
   }
 }

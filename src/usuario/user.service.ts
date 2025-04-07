@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ListaUsuarios } from "./dto/ListaUsuario.dto";
 import { NotFoundError } from "rxjs";
 import { AtualizaUsuarioDto } from "./dto/AtualizaUsuario.dto";
+import { UsuarioDto } from "./dto/Usuario.dto";
 
 @Injectable()
 export class UsuarioService {
@@ -16,7 +17,7 @@ export class UsuarioService {
     return users;
   }
 
-  async criarUsuario(usuario: UsuarioEntity): Promise<{ message: string, usuario: UsuarioEntity }> {
+  async criarUsuario(usuario: UsuarioDto): Promise<{ message: string, usuario: UsuarioEntity }> {
     try {
       const user = await this.usuarioRepository.save(usuario);
       return { message: "Usuário criado com sucesso!", usuario: user }

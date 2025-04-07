@@ -19,7 +19,7 @@ import { ValidaNome } from '../validator/produto-unico.validator';
 export class ProdutoDTO {
   @IsString({ message: 'Nome inválido.' })
   @IsNotEmpty({ message: 'Campo nome não pode ser vazio.' })
-  @ValidaNome({ message: "Já existe um produto com o mesmo nome cadastrado, tente um nome diferente." })
+  // @ValidaNome({ message: "Já existe um produto com o mesmo nome cadastrado, tente um nome diferente." })
   nome: string;
 
   @IsNotEmpty({ message: 'Valor não poder estar vazio.' })

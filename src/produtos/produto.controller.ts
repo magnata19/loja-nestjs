@@ -1,8 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { ProdutoRepository } from './produto.repository';
 import { ProdutoDTO } from './dto/produto.dto';
-import { ProdutoEntity } from './entity/produto.entity';
-import { v4 as uuid } from 'uuid';
 import { ProdutoService } from './service/produto.service';
 
 @Controller('/produtos')
@@ -11,8 +8,8 @@ export class ProdutoController {
 
   @Post()
   async salvarProduto(@Body() produto: ProdutoDTO): Promise<any> {
-    const currentProduct = await this.produtoService.criaProduto(produto);
-    return { message: 'Produto criado com sucesso.', produto: currentProduct }
+    return await this.produtoService.criaProduto(produto);
+
   }
 
   @Get()
